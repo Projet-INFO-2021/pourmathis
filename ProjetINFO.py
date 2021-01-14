@@ -327,6 +327,9 @@ INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_
 cursor.execute("""
 INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 3, 2, 1, 1, 1);""")
 
+cursor.execute("""
+INSERT INTO TokenModule (Token_Code, Module_CodeModule) VALUES (111111, 1);""")
+
 
 
 def Identification(nomdecompte, motdepasse):
@@ -375,8 +378,7 @@ def AjouterEleveEcole(nom, prenom, datedenaissance, annee, filiaire, statut, mot
     cursor.execute("""INSERT INTO  Identifiants(NomDeCompte, MotDePasse, Personne_idPersonne, Connexion) VALUES(?,?,?,?)""",(nomdecompte,motdepasse, id, 0))
     cursor.execute("""INSERT INTO Personne(idPersonne, Nom, Prenom, DateDeNaissance, Annee, Filliaire, Personne_Statut) VALUES(?,?,?,?,?,?,?)""",(id, nom, prenom, datedenaissance, annee, filiaire, statut))
 
-def AfficherConnexion():
-    cursor.execute("""SELECT NomDeCompte FROM Identifiants WHERE Connexion =1""")
+
 
 def Delete(table,tableid,id):
     cursor.execute("""DELETE * FROM ? WHERE ? = ?""",(table,tableid,id))
@@ -413,14 +415,24 @@ def EleveVersID (nom, prenom):
     else :
          return resultat[0]
 
+def IDVersEleve(ideleve):
+    cursor.execute("SELECT Nom, Prenom FROM Personne WHERE idPersonne = " +str(ideleve))
+    pers = cursor.fetchone()
+    return pers
+
 
 def ModuleVersID(nom):
     cursor.execute("""SELECT CodeModule FROM Module WHERE NomModule = ?""" ,[nom])
     rows = str(cursor.fetchone())
     return rows[1]
-    
 
-def SupprimerELeveModule(idEleve,idMod):
+def IDVersModule(IdModule):
+    cursor.execute("""SELECT NomModule FROM Module WHERE CodeModule = ?""" ,[IdModule])
+    rows = str(cursor.fetchone())
+    return rows
+    
+def SupprimerELeveModule(idEleve,nomMod):
+    idMod = ModuleVersID(nomMod)
     cursor.execute("""SELECT Personne_idPersonne FROM Module_has_Personne WHERE Personne_idPersonne = ? AND Module_CodeModule = ?""",(idEleve,idMod))
     resultat = list(cursor)
     if len(resultat) == 0 :
@@ -429,12 +441,6 @@ def SupprimerELeveModule(idEleve,idMod):
         cursor.execute("""DELETE FROM Module_has_Personne WHERE Personne_idPersonne = ? AND Module_CodeModule = ?""",(idEleve,idMod,))
         cursor.execute("""DELETE FROM Avancement WHERE Personne_idPersonne = ? """,(idEleve,))
 
-
-def TrouveNom(ids):
-    cursor.execute("SELECT Nom, Prenom FROM Personne WHERE idPersonne = " +str(ids))
-    rows = str(cursor.fetchone())
-    return rows
-    
 def AjouterEleveAModule(nom, prenom, module) :
     IDEleve = int(EleveVersID(nom, prenom))
     cursor.execute("SELECT CodeModule FROM Module WHERE NomModule = ?",(module,))
@@ -453,7 +459,7 @@ def ReconnaissanceCompte(nomdecompte, motdepasse):
     return (resultat[0])
 
 
-def DeconnexionParNom(nom, prenom):
+def DeconnexionParNom(nom, prenom):#bolossdu34
     id=EleveVersID(nom, prenom)
     cursor.execute("""UPDATE Identifiants SET Connexion = ? WHERE Personne_idPersonne = ?""", (0,id,))
 
@@ -464,18 +470,18 @@ def AfficherModules(nom,prenom) : #Affiche les modules d'un élève
     id=EleveVersID(nom, prenom)
     cursor.execute("""SELECT Module_CodeModule FROM Module_has_Personne WHERE Personne_idPersonne = ?""", (id,))
     reponse=list(cursor)
-    liste = [reponse[x][0] for x in range(len(reponse))]
+    liste = [x[0] for x in reponse]
     return liste
 
 def AfficherChapitresModule(codeModule): 
     cursor.execute("""SELECT NomChapitre FROM Chapitre INNER JOIN Module ON Module.CodeModule=Chapitre.Module_CodeModule WHERE Module.codeModule = """,(codeModule,))
     reponse=list(cursor)
-    liste = [reponse[x][0] for x in range(len(reponse))]
+    liste = [x[0] for x in reponse]
     return liste
    
 def EtatLectureDocument(idpersonne,codemodule,codechapitre,codeactivite,codesousactivite,coderessource):
     cursor.execute("""UPDATE Avancement SET Etat_Etat=1 WHERE Personne_idPersonne=? AND Ressource_CodeRessource=? AND Ressource_SousActivite_CodeSousActivite=? AND Ressource_SousActivite_Activite_CodeActivite=? AND Ressource_SousActivite_Activite_Chapitre_CodeChapitre=? AND Ressource_SousActivite_Activite_Chapitre_Module_CodeModule=?""",(idpersonne,coderessource,codesousactivite,codeactivite,codechapitre,codemodule))
-    #yolo
+
 def AfficherEleveAccesRessource(codeModule, codeChapitre, codeActivite, codeSousActivite, codeRessource) :
     cursor.execute("""SELECT DISTINCT idPersonne FROM Personne INNER JOIN Module_has_Personne ON Personne.idPersonne = Module_has_Personne.Personne_idPersonne INNER JOIN Module ON Module_has_Personne.Module_CodeModule = Module.CodeModule INNER JOIN Chapitre ON Module.CodeModule = Chapitre.Module_CodeModule INNER JOIN Activite ON Chapitre.CodeChapitre = Activite.Chapitre_CodeChapitre INNER JOIN SousActivite ON Activite.CodeActivite = SousActivite.Activite_CodeActivite INNER JOIN Ressource ON SousActivite.CodeSousActivite = Ressource.SousActivite_Activite_CodeActivite WHERE Module.CodeModule = ? AND Chapitre.CodeChapitre = ? AND Activite.CodeActivite = ? AND SousActivite.CodeSousActivite = ? AND Ressource.CodeRessource = ?""" ,(codeModule, codeChapitre, codeActivite, codeSousActivite, codeRessource))
     reponse = list(cursor)
@@ -483,21 +489,21 @@ def AfficherEleveAccesRessource(codeModule, codeChapitre, codeActivite, codeSous
     return reponse
 
 def AfficherEleveDansModule (idModule) : #Montre les eleves présents dans un module donné
-    cursor.execute("""SELECT DISTINCT Nom, Prenom FROM Personne INNER JOIN Module_has_Personne ON Personne.idPersonne = Module_has_Personne.Personne_idPersonne INNER JOIN Module ON Module_has_Personne.Module_CodeModule = Module.CodeModule WHERE CodeModule = ?""" ,[idModule])
+    cursor.execute("""SELECT DISTINCT Nom, Prenom FROM Personne INNER JOIN Module_has_Personne ON Personne.idPersonne = Module_has_Personne.Personne_idPersonne INNER JOIN Module ON Module_has_Personne.Module_CodeModule = Module.CodeModule WHERE Module.CodeModule = ?""" ,[idModule])
     reponse = list(cursor)
     return reponse
 
-def AfficherActiviteChapitre(codeModule, codeChapitre):
+def AfficherActivitesChapitre(codeModule, codeChapitre):
     cursor.execute("""SELECT DISTINCT NomActivite FROM Activite INNER JOIN Chapitre ON Activite.Chapitre_CodeChapitre=Chapitre.CodeChapitre INNER JOIN Module ON Module.CodeModule = Chapitre.Module_CodeModule WHERE Activite.Chapitre_CodeChapitre = ? AND Activite.Chapitre_Module_CodeModule = ? """ ,(codeChapitre, codeModule,))
     reponse=list(cursor)
-    liste = [reponse[x][0] for x in range(len(reponse))]
+    liste = [x[0] for x in reponse]
     return liste
  
 def AfficherSousActivitesActivite(codeModule, codeChapitre, codeActivite):
     cursor.execute("""SELECT DISTINCT NomSousActivite FROM SousActivite INNER JOIN Activite ON Activite.CodeActivite = SousActivite.Activite_CodeActivite INNER JOIN Chapitre ON Activite.Chapitre_CodeChapitre=Chapitre.CodeChapitre INNER JOIN Module ON Module.CodeModule = Chapitre.Module_CodeModule WHERE SousActivite.Activite_CodeActivite = ? AND SousActivite.Activite_Chapitre_CodeChapitre = ? AND SousActivite.Activite_Chapitre_Module_CodeModule = ? """ ,(codeActivite, codeChapitre, codeModule,))
     reponse=list(cursor)
-    liste = [reponse[x][0] for x in range(len(reponse))]
-    return liste
+    liste = [x[0] for x in reponse]
+    return liste#baptou09
 
 def AfficherAvancement(idpersonne,codemodule,codechapitre,codeactivite,codesousactivite,coderessource):
     cursor.execute("""SELECT Etat_Etat FROM Avancement WHERE Personne_idPersonne = ? AND Ressource_SousActivite_Activite_Chapitre_Module_CodeModule = ? AND Ressource_SousActivite_Activite_Chapitre_CodeChapitre = ? AND Ressource_SousActivite_Activite_CodeActivite = ? AND Ressource_SousActivite_CodeSousActivite = ? AND Ressource_CodeRessource =?""" ,(idpersonne,codemodule,codechapitre,codeactivite,codesousactivite,coderessource,))
@@ -521,12 +527,12 @@ def AvancementNouveauModule(idModule, idPersonne) : #Apres ajout d'un élève à
         cursor.execute("INSERT INTO Avancement(Personne_idPersonne, Etat_Etat, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES(?,?,?,?,?,?,?) ;",(idPersonne,0,idModule, codeC, codeA, codeSA, codeR))
     cursor.execute("""SELECT * FROM Avancement""")
     sortie = list(cursor)
-    print (sortie)
+    return sortie
 
-def AfficherRessourceSousActivite(codeModule, codeChapitre, codeActivite, codeSousActivite):
+def AfficherRessourcesSousActivite(codeModule, codeChapitre, codeActivite, codeSousActivite):
      cursor.execute("""SELECT DISTINCT NomdeDocument FROM Ressource INNER JOIN SousActivite ON SousActivite.CodeSousActivite = Ressource.SousActivite_CodeSousActivite INNER JOIN Activite ON Activite.CodeActivite =  SousActivite.Activite_CodeActivite INNER JOIN Chapitre ON Chapitre.CodeChapitre = Activite.Chapitre_CodeChapitre INNER JOIN Module ON Module.CodeModule = Chapitre.Module_CodeModule WHERE Ressource.SousActivite_CodeSousActivite = ? AND Ressource.SousActivite_Activite_CodeActivite = ? AND Ressource.SousActivite_Activite_Chapitre_CodeChapitre = ? AND Ressource.SousActivite_Activite_Chapitre_Module_CodeModule = ?""" ,(codeSousActivite, codeActivite, codeChapitre, codeModule))
      reponse=list(cursor)
-     liste = [reponse[x][0] for x in range(len(reponse))]
+     liste = [x[0] for x in reponse]
      return liste 
      
 def VerificationToken(CodeToken):
@@ -542,43 +548,40 @@ def ListeEleves():
     reponse = list(cursor)
     return reponse
 
+def AjoutSelonToken(codeToken, idPersonne):
+    idMod = VerificationToken(codeToken)
+    cursor.execute("INSERT INTO Module_has_Personne(Module_CodeModule, Personne_idPersonne) VALUES( ?, ?);",(idMod, idPersonne))
+    
+
+def TokenDuModule(idModule):
+    cursor.execute("""SELECT Token_Code FROM TokenModule WHERE Module_CodeModule = ?""",(idModule,))
+    resultat = list(cursor)
+    return (resultat)
+
+
+#def AfficherModulesComplet(idPersonne):
+ #   for idModule in AfficherModules(IDVersEleve):
+ #       print(IDVersModule(idModule))
+  #      for nomChapitre in AfficherChapitresModule(idModule):
+  #         idChapitre = ChapVersID(nomChapitre)
+  #         print(nomChapitre)
+   #        for nomActivite in AfficherActivitesChapitre(idModule,idChapitre):
+   #            print(nomActivite)
+   #            idActivite = ActiviteVersID(nomActivite)
+    #           for nomSA in AfficherSousActivitesActivite(idModule,idChapitre,idActivite):
+    #               print(nomSA)
+    #               idSA = SAVersID(nomSA)
+     #              for nomRessource in AfficherRessourcesSousActivite(idModule,idChapitre,id):
+        #               print(nomRessource)     
+
+
+        
+
+
+
+print(AfficherEleveDansModule(1))
 a=CreationToken(1)
-print(VerificationToken(a))
+#print(TokenDuModule(1))
 
-#Fonctions à Créer
-#Pour les élèves :
-# 
-#   Afficher Modules                                    fait 
-#   Afficher Chapitres d'un Module                      fait 
-#   Afficher Activités d'un Chapitre                    fait 
-#   Afficher Sous Activités d'une Activité              fait 
-#   Afficher Ressource d'une Sous Activité              fait
-#   Afficher Eleves de ses Modules                      fait 
-#   EstConnecté                                         fait
-#   Connexion                                           fait
-#   Deconnexion                                         fait
-#   Avancement
-#   Etat de Lecture d'un Document                       fait
-#       (optionnel) Commentaire                     non fait
-#       (optionnel) Rendu                           non fait
-#       (optionnel) Afficher ressources Token       non fait
-
-#Pour les Professeurs :
-#
-#   Ajouter Eleve à Ecole                               fait
-#   Retirer Eleve à Ecole                               fait
-#   Afficher Eleves de ses Modules (avec modules?)      fait 
-#   Ajouter Eleve a Module                              fait
-#   Retirer Eleve à Module                              fait 
-#   Creer Module                                        fait
-#   Creer Chapitre                                      fait
-#   Creer Activité                                      fait
-#   Creer Sous Activité                                 fait
-#   Ajouter Ressource                                   fait
-#   Afficher Eleve ayant acces Ressource                fait
-#   Ajouter Avancement                                  fait 
-#   Afficher Etat Lecture par Eleve par Doc         non fait
-#       (optionnel) Lire Commentaires               non fait
-#       (optionnel) Consulter Rendus                non fait
- 
-#   Ajouter Avancements pour nouvel eleve
+AjoutSelonToken(a,6)
+print(AfficherEleveDansModule(1))
