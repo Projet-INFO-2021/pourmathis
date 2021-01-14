@@ -135,8 +135,7 @@ CREATE TABLE IF NOT EXISTS Avancement (
   PRIMARY KEY (Personne_idPersonne, Etat_Etat, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource))
   """)
 
-cursor.execute("""
-DROP TABLE Commentaires""")
+
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Commentaires (
@@ -169,7 +168,6 @@ CREATE TABLE IF NOT EXISTS Token_has_Personne (
   PRIMARY KEY (Token_idToken, Personne_idPersonne))
   """)
 
- 
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Token_has_Ressource (
@@ -303,21 +301,21 @@ cursor.execute("""
 INSERT INTO Token_has_Personne (Token_idToken, Personne_idPersonne) VALUES (2, 3);""")
 
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (1, 1, 1, 1, 1, 1);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (1, 1, 1, 1, 1, 1);""")
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (1, 1, 1, 1, 1, 2);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (1, 1, 1, 1, 1, 2);""")
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (1, 2, 1, 1, 1, 2);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (1, 2, 1, 1, 1, 2);""")
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 1, 1, 1, 1, 1);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 1, 1, 1, 1, 1);""")
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 1, 1, 1, 1, 3);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 1, 1, 1, 1, 3);""")
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 2, 1, 1, 1, 1);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 2, 1, 1, 1, 1);""")
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 2, 1, 1, 1, 2);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 2, 1, 1, 1, 2);""")
 cursor.execute("""
-INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivité_Activité_CodeActivité, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 3, 2, 1, 1, 1);""")
+INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 3, 2, 1, 1, 1);""")
 
 #cursor.execute("""""")
 
@@ -385,22 +383,8 @@ cursor.execute("""SELECT idPersonne, Nom, Prenom, DateDeNaissance FROM Personne 
 response = cursor.fetchone()
 print(response)
 
-
-print("Entrer ID d'élève que vous voulez supprimer")
-iD=input()
-
- 
-
-#print("Entrer son nom")
-#Nom=input()
-
-  
-#cursor.execute("SELECT Personne_idPersonne FROM Identifiants WHERE Personne_idPersonne = "+ str(id))
-#resultat = list(cursor)
-#print(resultat)
 def delete(table,tableid,id):
     cursor.execute("""DELETE * FROM ? WHERE ? = ?""",(table,tableid,id))
-
 
  
 def SuppressionEleveEcole(iD):
@@ -416,7 +400,7 @@ def SuppressionEleveEcole(iD):
         cursor.execute("DELETE * FROM Module_has_Personne WHERE Personne_idPersonne = " + str(id))
         cursor.execute("DELETE * FROM Commentaires WHERE Personne_idPersonne = " + str(id))
         cursor.execute("DELETE * FROM Rendu WHERE Personne_idPersonne = " + str(id))
-        return "Vous avez bien supprimé l'élève"
+        return "Vous avez bien supprime l'eleve"
 
 def estconnecte():
     cursor.execute("""SELECT NomDeCompte FROM Identifiants WHERE Connexion = 1""")
@@ -426,34 +410,47 @@ def estconnecte():
 
 
 def EleveVersID (nom, prenom, annee):
-    cursor.execute("SELECT idPersonne FROM Personne WHERE Nom = ? AND Prenom = ? AND Annee = ? ",(nom, prenom, annee))
-    resultat = list(cursor)
+    cursor.execute("""SELECT idPersonne FROM Personne WHERE Nom = ? AND Prenom = ? AND Annee = ? """,(nom, prenom, annee))
+    resultat = cursor.fetchone()
     if len(resultat) == 0 :
         return "Informations Eleve incorrectes" 
     else :
          return resultat
 
 
-def ModuleVersID (nom):
-    cursor.execute("SELECT CodeModule FROM Module WHERE NomModule = ? ",(nom))  
-    resultat = list(cursor)
-    if len(resultat) == 0 :
-        return "Module Inexistant"
-    else :
-        return
+def ModuleVersID(nom):
+    cursor.execute("""SELECT CodeModule FROM Module WHERE NomModule = ?""" ,[nom])
+    rows = str(cursor.fetchone())
+    return rows[1]
+    
 
 def SupprimerELeveModule(idEleve,idMod):
-    cursor.execute("SELECT Personne_idPersonne FROM Module_has_Personne WHERE Personne_idPersonne = ? AND Module_CodeModule = ?",(idEleve,idMod))
+    cursor.execute("""SELECT Personne_idPersonne FROM Module_has_Personne WHERE Personne_idPersonne = ? AND Module_CodeModule = ?""",(idEleve,idMod))
     resultat = list(cursor)
     if len(resultat) == 0 :
         return "Eleve deja absent du Module"
     else :
-        cursor.execute("DELETE * FROM Module_has_Personne WHERE Personne_idPersonne = ? AND Module_CodeModule = ?",(idEleve,idMod))
+        cursor.execute("""DELETE * FROM Module_has_Personne WHERE Personne_idPersonne = ? AND Module_CodeModule = ?""",(idEleve,idMod))
 
 
-def trouveNom(id):
-    cursor.execute("SELECT Nom, Prenom FROM Personne WHERE idPersonne =?",(id))
-    res=list(cursor)
-    return res[0]
+def trouveNom(ids):
+    cursor.execute("SELECT Nom, Prenom FROM Personne WHERE idPersonne = " +str(ids))
+    rows = str(cursor.fetchone())
+    return rows
+    
+def AjouterEleveAModule(nom, prenom, annee, mdule) :
+    IDEleve = EleveEleveVersID(nom, prenom, annee)
+    cursor.execute("SELECT CodeModule FROM Module WHERE NomModule = " +str(mdule))
+    rows = cursor.fetchone()
+    cursor.execute("""INSERT INTO Module_has_Personne(Module_CodeModule, Personne_idPersonne) VALUES(?, ?)""", rows, IDEleve)
 
-print(trouveNom(3))
+
+
+#Fonctions à Créer
+#
+#Pour les élèves :
+#   
+#   Afficher Modules
+#   Afficher Chapitres d'un Module
+ 
+print(ModuleVersID('chocolat'))
