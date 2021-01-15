@@ -166,9 +166,9 @@ CREATE TABLE IF NOT EXISTS Token_has_Personne (
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS TokenModule (
-  Token_Code INT NOT NULL,
+  Token_idToken INT NOT NULL,
   Module_CodeModule INT NOT NULL,
-  PRIMARY KEY (Token_Code))
+  PRIMARY KEY (Token_idToken))
   """)
 
 
@@ -328,7 +328,7 @@ cursor.execute("""
 INSERT INTO Token_has_Ressource (Token_idToken, Ressource_SousActivite_Activite_Chapitre_Module_CodeModule, Ressource_SousActivite_Activite_Chapitre_CodeChapitre, Ressource_SousActivite_Activite_CodeActivite, Ressource_SousActivite_CodeSousActivite, Ressource_CodeRessource) VALUES (2, 3, 2, 1, 1, 1);""")
 
 cursor.execute("""
-INSERT INTO TokenModule (Token_Code, Module_CodeModule) VALUES (111111, 1);""")
+INSERT INTO TokenModule (Token_idToken, Module_CodeModule) VALUES (111111, 1);""")
 
 
 
@@ -343,7 +343,7 @@ def Identification(nomdecompte, motdepasse):
 
 def CreationToken(codemodule):
     rand = random.randint(100000, 999999)
-    cursor.execute("""INSERT INTO TokenModule(Token_Code, Module_CodeModule) VALUES(?,?)""",(rand,codemodule))
+    cursor.execute("""INSERT INTO TokenModule(Token_idToken, Module_CodeModule) VALUES(?,?)""",(rand,codemodule))
     return rand
 
 
@@ -372,18 +372,13 @@ def AjouterRessource(NomdeDocument, SousActivite_Activite_Chapitre_Module_CodeMo
     AjouterAvancement(SousActivite_Activite_Chapitre_Module_CodeModule, SousActivite_Activite_Chapitre_CodeChapitre, SousActivite_Activite_CodeActivite,  SousActivite_CodeSousActivite, CodeRessource)
 
 def AjouterEleveEcole(nom, prenom, datedenaissance, annee, filiaire, statut, motdepasse, nomdecompte):
-    cursor.execute("""SELECT MAX(idPersonne) FROM Personne""")
+    cursor.execute("""SELECT MAX(idPersonne) FROM Personne""") 
     idList = list(cursor)
     id = idList[0][0] +1
     cursor.execute("""INSERT INTO  Identifiants(NomDeCompte, MotDePasse, Personne_idPersonne, Connexion) VALUES(?,?,?,?)""",(nomdecompte,motdepasse, id, 0))
     cursor.execute("""INSERT INTO Personne(idPersonne, Nom, Prenom, DateDeNaissance, Annee, Filliaire, Personne_Statut) VALUES(?,?,?,?,?,?,?)""",(id, nom, prenom, datedenaissance, annee, filiaire, statut))
 
 
-
-def Delete(table,tableid,id):
-    cursor.execute("""DELETE * FROM ? WHERE ? = ?""",(table,tableid,id))
-
- 
 def SuppressionEleveEcole(iD):
     cursor.execute("SELECT Personne_idPersonne FROM Identifiants WHERE Personne_idPersonne = " + str(id))
     resultat = list(cursor)
@@ -536,7 +531,7 @@ def AfficherRessourcesSousActivite(codeModule, codeChapitre, codeActivite, codeS
      return liste 
      
 def VerificationToken(CodeToken):
-    cursor.execute("""SELECT Module_CodeModule FROM TokenModule WHERE Token_Code=?""",(CodeToken,))
+    cursor.execute("""SELECT Module_CodeModule FROM TokenModule WHERE Token_idToken=?""",(CodeToken,))
     reponse =list(cursor)
     if len(reponse) == 0 :
         return -1
@@ -554,14 +549,27 @@ def AjoutSelonToken(codeToken, idPersonne):
     
 
 def TokenDuModule(idModule):
-    cursor.execute("""SELECT Token_Code FROM TokenModule WHERE Module_CodeModule = ?""",(idModule,))
-    resultat = list(cursor)
+    cursor.execute("""SELECT Token_idToken FROM TokenModule WHERE Module_CodeModule = ?""",(idModule,))
+    resultat = list(cursor) 
     return (resultat)
+
+def SupprimerTokenModule(idToken):
+    cursor.execute("""SELECT idToken FROM Token WHERE idToken  = ? """,(idToken,))
+    resultat = list(cursor)
+    if len(resultat) == 0 :
+        return "Token n existe pas"
+    else :
+        cursor.execute("""DELETE FROM Token_has_Personne WHERE Token_idToken = ? """,(idToken,))
+        cursor.execute("""DELETE FROM Token WHERE idToken = ? """,(idToken,))
+        cursor.execute("""DELETE FROM TokenModule WHERE Token_idToken = ? """,(idToken,))
+        cursor.execute("""DELETE FROM Token_has_Ressource WHERE Token_idToken = ? """,(idToken,))
+
+
 
 
 #def AfficherModulesComplet(idPersonne):
  #   for idModule in AfficherModules(IDVersEleve):
- #       print(IDVersModule(idModule))
+ #       print(IDVersModule(idModule)):
   #      for nomChapitre in AfficherChapitresModule(idModule):
   #         idChapitre = ChapVersID(nomChapitre)
   #         print(nomChapitre)
@@ -573,15 +581,3 @@ def TokenDuModule(idModule):
     #               idSA = SAVersID(nomSA)
      #              for nomRessource in AfficherRessourcesSousActivite(idModule,idChapitre,id):
         #               print(nomRessource)     
-
-
-        
-
-
-
-print(AfficherEleveDansModule(1))
-a=CreationToken(1)
-#print(TokenDuModule(1))
-
-AjoutSelonToken(a,6)
-print(AfficherEleveDansModule(1))
