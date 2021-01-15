@@ -34,3 +34,4 @@ ListeEleves()		=> Donne la liste de tous les élèves de la base
 AjoutSelonToken(CodeToken,IdPersonne)	=>Personne ajoutée au module correspondant
 TokenDuModule(IdModule)		=> Renvoie le token du module
 AfficherModulesComplet =>PasUtile 
+SupprimerTokenModule(idToken)   => Supprime un Token de TOUTE la base de données
